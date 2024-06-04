@@ -1,6 +1,7 @@
 <?php
-class PayController {
+session_start();
 
+class BolController {
     public function __construct() {
         $data = [
             'reference_id' => 'ex-00001',
@@ -37,33 +38,44 @@ class PayController {
                     'postal_code' => '01452002'
                 ]
             ],
+            'notification_urls' => [
+                'https://meusite.com/notificacoes'
+            ],
             'charges' => [
                 [
-                    'reference_id' => 'ex-00001',
-                    'description' => 'Descrição do pedido',
+                    'reference_id' => 'referencia da cobranca',
+                    'description' => 'descricao da cobranca',
                     'amount' => [
                         'value' => 500,
                         'currency' => 'BRL'
                     ],
                     'payment_method' => [
-                        'type' => 'CREDIT_CARD',
-                        'installments' => 1,
-                        'capture' => true,
-                        'card' => [
-                            'number' => '4111111111111111',
-                            'exp_month' => 12,
-                            'exp_year' => 2026,
-                            'security_code' => '123',
+                        'type' => 'BOLETO',
+                        'boleto' => [
+                            'due_date' => date('Y-m-d', strtotime('+3 days')),
+                            'instruction_lines' => [
+                                'line_1' => 'Pagamento processado para DESC Fatura',
+                                'line_2' => 'Via PagSeguro'
+                            ],
                             'holder' => [
-                                'name' => 'Jose da Silva'
+                                'name' => 'Jose da Silva',
+                                'tax_id' => '12345679891',
+                                'email' => 'jose@email.com',
+                                'address' => [
+                                    'country' => 'Brasil',
+                                    'region' => 'São Paulo',
+                                    'region_code' => 'SP',
+                                    'city' => 'Sao Paulo',
+                                    'postal_code' => '01452002',
+                                    'street' => 'Avenida Brigadeiro Faria Lima',
+                                    'number' => '1384',
+                                    'locality' => 'Pinheiros'
+                                ]
                             ]
                         ]
                     ]
                 ]
-            ],
-            'notification_urls' => [
-                'https://meusite.com/notificacoes'
-            ],
+            ]
         ];
 
         $curl = curl_init();
@@ -93,15 +105,20 @@ class PayController {
             if (isset($retorno->error_messages)) {
                 echo "Erro: " . $retorno->error_messages[0]->description;
             } else {
-                $this->exibirDetalhesDaTransacao($retorno);
+                foreach ($retorno->charges[0]->links as $link) {
+                    if ($link->media == "application/pdf") {
+                        $_SESSION['boleto_link'] = $link->href;
+                        echo "<script>
+                            window.open('{$link->href}', '_blank');
+                            window.location.href = '../views/bol_view.php';
+                        </script>";
+                        exit;
+                    }
+                }
             }
         }
     }
-
-    private function exibirDetalhesDaTransacao($transacao) {
-        include __DIR__ . '/../views/transacao_view.php';
-    }
 }
 
-$obj = new PayController();
+$obj = new BolController();
 ?>

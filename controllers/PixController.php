@@ -1,5 +1,5 @@
-<?php
-class PayController {
+<?php 
+class PixController {
 
     public function __construct() {
         $data = [
@@ -19,12 +19,20 @@ class PayController {
             ],
             'items' => [
                 [
-                    'reference_id' => 'referencia do item',
-                    'name' => 'nome do item',
+                    'reference_id' => 'Notebook gamer',
+                    'name' => 'notebook',
                     'quantity' => 1,
-                    'unit_amount' => 500
+                    'unit_amount' => 3000
                 ]
             ],
+            "qr_codes"=> [
+                [
+                  "amount"=> [
+                    "value"=> 3000
+                  ],
+                  "expiration_date"=> "2024-08-29T20:15:59-03:00",
+                ]
+              ],
             'shipping' => [
                 'address' => [
                     'street' => 'Avenida Brigadeiro Faria Lima',
@@ -37,33 +45,10 @@ class PayController {
                     'postal_code' => '01452002'
                 ]
             ],
-            'charges' => [
-                [
-                    'reference_id' => 'ex-00001',
-                    'description' => 'Descrição do pedido',
-                    'amount' => [
-                        'value' => 500,
-                        'currency' => 'BRL'
-                    ],
-                    'payment_method' => [
-                        'type' => 'CREDIT_CARD',
-                        'installments' => 1,
-                        'capture' => true,
-                        'card' => [
-                            'number' => '4111111111111111',
-                            'exp_month' => 12,
-                            'exp_year' => 2026,
-                            'security_code' => '123',
-                            'holder' => [
-                                'name' => 'Jose da Silva'
-                            ]
-                        ]
-                    ]
-                ]
-            ],
             'notification_urls' => [
                 'https://meusite.com/notificacoes'
             ],
+            
         ];
 
         $curl = curl_init();
@@ -86,22 +71,30 @@ class PayController {
         $err = curl_error($curl);
         curl_close($curl);
 
+        $retorno = curl_exec($curl);
+        $err = curl_error($curl);
+        curl_close($curl);
+
         if ($err) {
             echo "cURL Error #:" . $err;
         } else {
             $retorno = json_decode($retorno);
             if (isset($retorno->error_messages)) {
                 echo "Erro: " . $retorno->error_messages[0]->description;
-            } else {
-                $this->exibirDetalhesDaTransacao($retorno);
+            }  else {
+                if (isset($retorno->qr_codes[0]->links)) {
+                    foreach ($retorno->qr_codes[0]->links as $link) {
+                        if ($link->rel == "QRCODE.PNG") {
+                            echo "<img src='" . $link->href . "' alt='QR Code'>";
+                        } 
+                    }
+                } else {
+                    echo "QR Code não encontrado na resposta.";
+                }
             }
-        }
-    }
-
-    private function exibirDetalhesDaTransacao($transacao) {
-        include __DIR__ . '/../views/transacao_view.php';
+        }  
     }
 }
 
-$obj = new PayController();
+$obj = new PixController();
 ?>

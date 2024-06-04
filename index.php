@@ -18,7 +18,7 @@
             <div class="product-image">
             <img src="assets/img/notbook.jpg" alt="notebook" style="width: 50%">
             </div>
-            <a href="checkout.php?name=casinha&&price=3000">
+            <a href="checkout.php?name=notebook&&price=3000">
             <div class="product-button"> 
                 <div        class="product-button-label">Comprar</div>
             </div>
@@ -26,19 +26,7 @@
         </div>
     </main>
 
-    <div style="width: 30%; margin: 30px 1.5%; border-radius: 5px; box-shadow: 0 10px 20px #999; text-align: center; padding: 10px; ">
-        Notebook Gamer <br>
-        R$3000,00 <br> 
-
-        <img src="assets/img/notbook.jpg" alt="notbook" style="width: 50%">
-
-        <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-            <input type="hidden" name="cmd" value="_s-xclick" />
-            <input type="hidden" name="hosted_button_id" value="FZ49DXHQCPURG" />
-            <input type="hidden" name="currency_code" value="BRL" />
-            <input type="image" src="https://www.paypalobjects.com/pt_BR/i/btn/btn_buynowCC_LG.gif" border="0" name="submit" title="O PayPal é a forma fácil e segura de pagar suas compras on-line." alt="Comprar agora" />
-        </form>
-    </div>
+    
     </main>
 
     <footer>
