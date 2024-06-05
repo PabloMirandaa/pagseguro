@@ -20,9 +20,9 @@ class PayController {
             'items' => [
                 [
                     'reference_id' => 'referencia do item',
-                    'name' => 'nome do item',
+                    'name' => 'Notebook Gamer',
                     'quantity' => 1,
-                    'unit_amount' => 500
+                    'unit_amount' => 300000
                 ]
             ],
             'shipping' => [
@@ -42,7 +42,7 @@ class PayController {
                     'reference_id' => 'ex-00001',
                     'description' => 'Descrição do pedido',
                     'amount' => [
-                        'value' => 500,
+                        'value' => 300000,
                         'currency' => 'BRL'
                     ],
                     'payment_method' => [

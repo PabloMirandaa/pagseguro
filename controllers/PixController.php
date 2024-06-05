@@ -1,4 +1,5 @@
 <?php 
+session_start();
 class PixController {
 
     public function __construct() {
@@ -28,7 +29,7 @@ class PixController {
             "qr_codes"=> [
                 [
                   "amount"=> [
-                    "value"=> 3000
+                    "value"=> 300000
                   ],
                   "expiration_date"=> "2024-08-29T20:15:59-03:00",
                 ]
@@ -85,16 +86,20 @@ class PixController {
                 if (isset($retorno->qr_codes[0]->links)) {
                     foreach ($retorno->qr_codes[0]->links as $link) {
                         if ($link->rel == "QRCODE.PNG") {
-                            echo "<img src='" . $link->href . "' alt='QR Code'>";
-                        } 
+                            $_SESSION['pix_qrcode'] = $link->href;
+                            echo "<script>
+                                window.open('{$link->href}', '_blank');
+                                window.location.href = '../views/pix_view.php';
+                            </script>";
+                            exit;
+                        }
                     }
                 } else {
                     echo "QR Code não encontrado na resposta.";
                 }
             }
-        }  
+        }
     }
-}
-
-$obj = new PixController();
-?>
+}    
+    $obj = new PixController();
+    ?>

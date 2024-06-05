@@ -21,9 +21,9 @@ class BolController {
             'items' => [
                 [
                     'reference_id' => 'referencia do item',
-                    'name' => 'nome do item',
+                    'name' => 'notebook gamer',
                     'quantity' => 1,
-                    'unit_amount' => 500
+                    'unit_amount' => 300000
                 ]
             ],
             'shipping' => [
@@ -46,7 +46,7 @@ class BolController {
                     'reference_id' => 'referencia da cobranca',
                     'description' => 'descricao da cobranca',
                     'amount' => [
-                        'value' => 500,
+                        'value' => 300000,
                         'currency' => 'BRL'
                     ],
                     'payment_method' => [
