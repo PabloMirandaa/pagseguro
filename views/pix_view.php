@@ -1,7 +1,7 @@
-<?php
+<?php 
 session_start();
-$pixQRCode = isset($_SESSION['pix_qrcode']) ? $_SESSION['pix_qrcode'] : '#';
 ?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -14,10 +14,10 @@ $pixQRCode = isset($_SESSION['pix_qrcode']) ? $_SESSION['pix_qrcode'] : '#';
 <div class="container mt-5">
     <div class="alert alert-success" role="alert">
         <h4 class="alert-heading">Compra Concluída!</h4>
-        <p>Sua compra foi concluída com sucesso. O QR code do PIX foi gerado e está disponível para pagamento.</p>
-        <a href="<?php echo $pixQRCode; ?>" target="_blank" class="btn btn-primary">Abrir QR code</a>
+        <p>Sua compra foi concluída com sucesso. O QR Code foi gerado e está disponível para pagamento.</p>
         <hr>
         <p class="mb-0">Obrigado por comprar conosco!</p>
+        <button onclick="window.open('<?php echo isset($_SESSION['pix_qrcode']) ? $_SESSION['pix_qrcode'] : ''; ?>', '_blank')" class="btn btn-primary mt-3">Abrir QR Code</button>
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

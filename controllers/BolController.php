@@ -2,7 +2,38 @@
 session_start();
 
 class BolController {
+    protected static $configuracoes;
+    protected static $accessToken;
+    private static $_instancia = null;
+
     public function __construct() {
+        self::iniciarVariaveis();
+    }
+
+    public static function get() {
+        if (self::$_instancia == null) {
+            self::$_instancia = new BolController();
+        }
+        return self::$_instancia;
+    }
+
+    private static function iniciarVariaveis() {
+        // Caminho absoluto para o diretório base do projeto
+        $baseDir = dirname(__DIR__);
+
+        // Caminho absoluto para o arquivo de configuração
+        $arquivoConfiguracoes = file_get_contents($baseDir . "/config/token.config");
+
+        if ($arquivoConfiguracoes === false) {
+            die("Erro ao abrir o arquivo de configuração.");
+        }
+
+        self::$configuracoes = json_decode($arquivoConfiguracoes, true);
+        self::$accessToken = self::$configuracoes["tokenACesso"];
+    }
+
+    public function solicitarPagamento() {
+        $stringCredenciais = self::$accessToken;
         $data = [
             'reference_id' => 'ex-00001',
             'customer' => [
@@ -83,7 +114,7 @@ class BolController {
         curl_setopt($curl, CURLOPT_HTTPHEADER, array(
             "accept: application/json",
             'Content-Type: application/json',
-            'Authorization: Bearer 3D692C03C55B48EB9ED61F2851AD7F4D'
+            'Authorization: Bearer ' . $stringCredenciais
         ));
         curl_setopt($curl, CURLOPT_POST, true);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -120,5 +151,6 @@ class BolController {
     }
 }
 
-$obj = new BolController();
+$obj = BolController::get();
+$obj->solicitarPagamento();
 ?>
